@@ -1,0 +1,99 @@
+#include <WiFiS3.h>
+
+const char* SSID = "TTUguest";
+const char* PASS = "fearthestache";
+
+// Put your SERVER UNO IP here:
+IPAddress serverIP(10, 175, 225, 161);
+
+WiFiClient client;
+
+bool ipValid(IPAddress ip) {
+  return !(ip[0] == 0 && ip[1] == 0 && ip[2] == 0 && ip[3] == 0);
+}
+
+void connectWiFi() {
+  Serial.print("Connecting to ");
+  Serial.println(SSID);
+
+  WiFi.begin(SSID, PASS);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(300);
+    Serial.print(".");
+  }
+  Serial.println("\nWL_CONNECTED");
+
+  // Wait until DHCP gives a real IP (prevents printing 0.0.0.0)
+  Serial.print("Waiting for DHCP IP");
+  unsigned long t0 = millis();
+  while (!ipValid(WiFi.localIP())) {
+    delay(200);
+    Serial.print(".");
+    if (millis() - t0 > 20000) break;
+  }
+  Serial.println();
+
+  Serial.print("Client IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.print("RSSI: ");
+  Serial.println(WiFi.RSSI());
+
+  Serial.println("\nCommands (set Serial Monitor line ending = No line ending):");
+  Serial.println("  p = /ping");
+  Serial.println("  1 = /led?on=1");
+  Serial.println("  0 = /led?on=0");
+}
+
+void httpGET(const char* path) {
+  Serial.print("\nREQUEST: ");
+  Serial.println(path);
+
+  if (!client.connect(serverIP, 80)) {
+    Serial.println("Connect failed");
+    return;
+  }
+
+  client.print("GET ");
+  client.print(path);
+  client.println(" HTTP/1.1");
+  client.print("Host: ");
+  client.println(serverIP);
+  client.println("Connection: close");
+  client.println();
+
+  // Print response (headers + body)
+  unsigned long t0 = millis();
+  while (client.connected() && millis() - t0 < 3000) {
+    while (client.available()) {
+      Serial.write(client.read());
+      t0 = millis();
+    }
+  }
+
+  client.stop();
+  Serial.println("\n--- done ---");
+}
+
+void setup() {
+  Serial.begin(115200);
+  while (!Serial) {}
+
+  connectWiFi();
+}
+
+void loop() {
+  // If Wi-Fi drops, reconnect
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("\nWiFi dropped. Reconnecting...");
+    connectWiFi();
+  }
+
+  if (Serial.available()) {
+    char c = Serial.read();
+
+    if (c == 'p' || c == 'P') httpGET("/ping");
+    if (c == '1')            httpGET("/led?on=1");
+    if (c == '0')            httpGET("/led?on=0");
+  }
+}
