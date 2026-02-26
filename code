@@ -5,8 +5,8 @@
 #include <Adafruit_AHTX0.h>
 
 // Wi-Fi
-const char* WIFI_SSID = "Park East";
-const char* WIFI_PASS = "CatchLionWhippet";
+const char* WIFI_SSID = "*******";
+const char* WIFI_PASS = "********";
 
 // Supabase
 const char* SUPABASE_HOST = "peqbwxeykjyakagjbwll.supabase.co";
