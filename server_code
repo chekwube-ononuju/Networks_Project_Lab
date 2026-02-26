@@ -1,7 +1,7 @@
 #include <WiFiS3.h>
 
-const char* SSID = "TTUguest";
-const char* PASS = "fearthestache";
+const char* SSID = "******";
+const char* PASS = "*******";
 
 WiFiServer server(80);
 const int LED = LED_BUILTIN;
