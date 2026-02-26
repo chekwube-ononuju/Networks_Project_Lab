@@ -9,9 +9,9 @@ const char* WIFI_SSID = "*******";
 const char* WIFI_PASS = "********";
 
 // Supabase
-const char* SUPABASE_HOST = "peqbwxeykjyakagjbwll.supabase.co";
-const int   SUPABASE_PORT = 443;
-const char* SUPABASE_KEY  = "sb_publishable_r9TY2z5UCOpLz9P5g1SNsw_idAhhcIL";
+const char* SUPABASE_HOST = "*********";
+const int   SUPABASE_PORT = ***;
+const char* SUPABASE_KEY  = "*******";
 
 WiFiSSLClient tls;
 HttpClient http(tls, SUPABASE_HOST, SUPABASE_PORT);
