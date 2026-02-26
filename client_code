@@ -1,10 +1,10 @@
 #include <WiFiS3.h>
 
-const char* SSID = "TTUguest";
-const char* PASS = "fearthestache";
+const char* SSID = "********";
+const char* PASS = "*********";
 
 // Put your SERVER UNO IP here:
-IPAddress serverIP(10, 175, 225, 161);
+IPAddress serverIP(xx, xxx, xxx, xxx);
 
 WiFiClient client;
 
